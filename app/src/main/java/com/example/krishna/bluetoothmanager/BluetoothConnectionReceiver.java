@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class BluetoothConnectionReceiver extends BroadcastReceiver {
     public BluetoothConnectionReceiver() {
     }
@@ -28,6 +30,7 @@ public class BluetoothConnectionReceiver extends BroadcastReceiver {
             else if(intent.getIntExtra("android.bluetooth.adapter.extra.PREVIOUS_CONNECTION_STATE", 0) == BluetoothAdapter.STATE_CONNECTED) {
                 setMinVolume(context);
             }
+
         }
 
     }

@@ -9,8 +9,39 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
-    <TextView android:text="Manage your music players here" android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/bluetoothSelectLabel"
+        android:text="Select your bluetooth device" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="20dp" />
+        android:textSize="15dip" />
+    
+    
+    <Spinner
+        android:id="@+id/bluetooth_device_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bluetoothSelectLabel"
+        android:paddingTop="5dip"
+        android:spinnerMode="dropdown"
+        />
+
+    <TextView
+        android:id="@+id/audioPlayerSelectLabel"
+        android:text="Select your audio player" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="15dip"
+        android:paddingTop="25dip"
+        android:layout_below="@id/bluetooth_device_spinner"/>
+
+
+    <Spinner
+        android:id="@+id/audio_player_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/audioPlayerSelectLabel"
+        android:paddingTop="5dip"
+        android:spinnerMode="dropdown"
+        />
 </RelativeLayout>
