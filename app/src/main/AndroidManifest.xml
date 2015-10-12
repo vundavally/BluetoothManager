@@ -23,7 +23,7 @@
         </activity>
 
         <receiver
-            android:name=".BluetoothConnectionReceiver"
+            android:name=".receiver.BluetoothConnectionReceiver"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>

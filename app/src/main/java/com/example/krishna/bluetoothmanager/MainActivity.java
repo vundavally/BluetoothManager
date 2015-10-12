@@ -2,7 +2,9 @@ package com.example.krishna.bluetoothmanager;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -17,16 +19,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.krishna.bluetoothmanager.data.object.DeviceMusicPlayerPair;
+import com.example.krishna.bluetoothmanager.data.object.MusicPlayer;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
+    public  static  final String PREF_FILE_NAME = "BLUETOOTH_MANAGER_SHARED_PREFS";
+    public static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter bluetoothAdapter;
     private Spinner bluetoothSpinner;
     private Spinner audioPlayerSpinner;
+    private TextView bluetoothSelectMsg;
+    private List<MusicPlayer> musicPlayers;
+    private List<String> pairedDevicesArray;
+    private boolean isBluetoothPermissionDenied;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,17 +60,73 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        fab.setVisibility(View.INVISIBLE);
 
+        bluetoothSelectMsg = (TextView)findViewById(R.id.bluetoothSelectLabel);
         //create bluetooth adapter
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        Set<BluetoothDevice> pairedBluetoothDevices = bluetoothAdapter.getBondedDevices();
-
-        bluetoothSpinner = (Spinner)findViewById(R.id.bluetooth_device_spinner);
-
-        populateBluetoothDeviceNames(pairedBluetoothDevices);
+        bluetoothSpinner = (Spinner) findViewById(R.id.bluetooth_device_spinner);
+        if(bluetoothAdapter.isEnabled() == false && isBluetoothPermissionDenied == false)
+        {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+        else if(isBluetoothPermissionDenied)
+        {
+            bluetoothSelectMsg.setText("Please enable bluetooth to see the devices paired.");
+            bluetoothSpinner.setVisibility(View.INVISIBLE);
+        }
+        else {
+            bluetoothSelectMsg.setText("Select your bluetooth device");
+            Set<BluetoothDevice> pairedBluetoothDevices = bluetoothAdapter.getBondedDevices();
+            populateBluetoothDeviceNames(pairedBluetoothDevices);
+            ArrayAdapter<String> spinnerArrayAdapter =
+                    new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, pairedDevicesArray);
+            bluetoothSpinner.setAdapter(spinnerArrayAdapter);
+        }
 
         audioPlayerSpinner = (Spinner)findViewById(R.id.audio_player_spinner);
         populateMusicPlayers();
+        ArrayAdapter<MusicPlayer> audioArrayAdapter =
+                new ArrayAdapter<MusicPlayer>(this, android.R.layout.simple_spinner_dropdown_item, musicPlayers);
+        audioPlayerSpinner.setAdapter(audioArrayAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode != REQUEST_ENABLE_BT)
+        {
+            return;
+        }
+
+        if(resultCode == RESULT_OK)
+        {
+            bluetoothSelectMsg.setText("Select your bluetooth device");
+            Set<BluetoothDevice> pairedBluetoothDevices = bluetoothAdapter.getBondedDevices();
+            populateBluetoothDeviceNames(pairedBluetoothDevices);
+            ArrayAdapter<String> spinnerArrayAdapter =
+                    new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, pairedDevicesArray);
+            bluetoothSpinner.setAdapter(spinnerArrayAdapter);
+        }
+        else if(resultCode == RESULT_CANCELED)
+        {
+            bluetoothSelectMsg.setText("Please enable bluetooth to see the devices paired.");
+            bluetoothSpinner.setVisibility(View.INVISIBLE);
+            isBluetoothPermissionDenied = true;
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private void populateBluetoothDeviceNames(Set<BluetoothDevice> pairedBluetoothDevices) {
@@ -61,35 +135,60 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        ArrayList<String> pairedDevicesArray = new ArrayList<>();
+        pairedDevicesArray = new ArrayList<>();
         for(BluetoothDevice pairedDevice : pairedBluetoothDevices)
         {
             pairedDevicesArray.add(pairedDevice.getName());
         }
 
-
-        ArrayAdapter<String> spinnerArrayAdapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, pairedDevicesArray);
-        bluetoothSpinner.setAdapter(spinnerArrayAdapter);
+//        ArrayAdapter<String> spinnerArrayAdapter =
+//                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, pairedDevicesArray);
+//        bluetoothSpinner.setAdapter(spinnerArrayAdapter);
     }
 
     private void populateMusicPlayers()
     {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri uri = Uri.withAppendedPath(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, "1");
-//        Uri uri = Uri.withAppendedPath(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "1");
-//        intent.setData(uri);
-//        intent.setType("audio/*");
-        intent.setDataAndType(uri, "audio/*");
-        List<ResolveInfo> audioApps = getPackageManager().queryIntentActivities(intent, 0);
-        ArrayList<String> audioAppNames = new ArrayList<>();
-        for (ResolveInfo rInfo : audioApps) {
-            audioAppNames.add(rInfo.loadLabel(getPackageManager()).toString());
+        PackageManager packageManager = getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        List<ResolveInfo> musicPlayersInfo = packageManager.queryBroadcastReceivers(intent, 0);
+
+        musicPlayers = new ArrayList<>();
+        for (ResolveInfo musicPlayerInfo : musicPlayersInfo) {
+            String musicPlayerName = musicPlayerInfo.loadLabel(packageManager).toString();
+
+            String musicPlayerPackageName = musicPlayerInfo.activityInfo.packageName;
+            MusicPlayer musicPlayer = new MusicPlayer(musicPlayerName, musicPlayerPackageName);
+            musicPlayers.add(musicPlayer);
         }
 
-        ArrayAdapter<String> audioArrayAdapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, audioAppNames);
-        audioPlayerSpinner.setAdapter(audioArrayAdapter);
+        Collections.sort(musicPlayers, new Comparator<MusicPlayer>() {
+            @Override
+            public int compare(MusicPlayer lhs, MusicPlayer rhs) {
+                return lhs.toString().compareTo(rhs.toString());
+            }
+        });
+
+//        ArrayAdapter<MusicPlayer> audioArrayAdapter =
+//                new ArrayAdapter<MusicPlayer>(this, android.R.layout.simple_spinner_dropdown_item, musicPlayers);
+//        audioPlayerSpinner.setAdapter(audioArrayAdapter);
+    }
+
+    public void pairMusicPlayerWithBluetoothDevice(View view)
+    {
+        String selectedBluetoothDevice = (String)bluetoothSpinner.getSelectedItem();
+        MusicPlayer selectedMusicPlayer = (MusicPlayer)audioPlayerSpinner.getSelectedItem();
+
+        DeviceMusicPlayerPair deviceMusicPlayerPair = new DeviceMusicPlayerPair(selectedBluetoothDevice, selectedMusicPlayer);
+
+        SharedPreferences sharedPref = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        //TODO try to save all the object using JSON
+        //Reference: http://stackoverflow.com/questions/7145606/how-android-sharedpreferences-save-store-object
+        editor.putString(selectedBluetoothDevice, selectedMusicPlayer.getPackageName());
+        editor.commit();
+
+        Snackbar.make(view, selectedBluetoothDevice + " is paired with " + selectedMusicPlayer.toString(), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override

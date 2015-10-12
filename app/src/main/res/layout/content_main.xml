@@ -15,11 +15,21 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="15dip" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/bluetoothDisabledMsg"-->
+        <!--android:text="Please enable bluetooth to see the devices paired." android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_below="@id/bluetoothSelectLabel"-->
+        <!--android:paddingTop="5dip"-->
+        <!--android:visibility="invisible"-->
+        <!--android:textSize="15dip" />-->
     
     
     <Spinner
         android:id="@+id/bluetooth_device_spinner"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/bluetoothSelectLabel"
         android:paddingTop="5dip"
@@ -35,13 +45,21 @@
         android:paddingTop="25dip"
         android:layout_below="@id/bluetooth_device_spinner"/>
 
-
     <Spinner
         android:id="@+id/audio_player_spinner"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/audioPlayerSelectLabel"
         android:paddingTop="5dip"
         android:spinnerMode="dropdown"
+        />
+
+    <Button
+        android:id="@+id/pair_button"
+        android:text="Pair"
+        android:onClick="pairMusicPlayerWithBluetoothDevice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         />
 </RelativeLayout>
