@@ -1,12 +1,16 @@
 package com.example.krishna.bluetoothmanager;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -87,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
 
         audioPlayerSpinner = (Spinner)findViewById(R.id.audio_player_spinner);
         populateMusicPlayers();
-        ArrayAdapter<MusicPlayer> audioArrayAdapter =
-                new ArrayAdapter<MusicPlayer>(this, android.R.layout.simple_spinner_dropdown_item, musicPlayers);
+        MusicPlayerAdapter audioArrayAdapter =
+                new MusicPlayerAdapter(this, R.layout.spinner_item, musicPlayers);
+        audioArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         audioPlayerSpinner.setAdapter(audioArrayAdapter);
     }
 
@@ -154,10 +159,24 @@ public class MainActivity extends AppCompatActivity {
 
         musicPlayers = new ArrayList<>();
         for (ResolveInfo musicPlayerInfo : musicPlayersInfo) {
+
             String musicPlayerName = musicPlayerInfo.loadLabel(packageManager).toString();
 
             String musicPlayerPackageName = musicPlayerInfo.activityInfo.packageName;
-            MusicPlayer musicPlayer = new MusicPlayer(musicPlayerName, musicPlayerPackageName);
+
+            Drawable drawable = musicPlayerInfo.loadIcon(packageManager);
+
+
+
+            try {
+                PackageInfo packageInfo = packageManager.getPackageInfo(musicPlayerPackageName, PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES);
+
+                ActivityInfo[] activites = packageInfo.activities;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            MusicPlayer musicPlayer = new MusicPlayer(musicPlayerName, musicPlayerPackageName, drawable);
             musicPlayers.add(musicPlayer);
         }
 

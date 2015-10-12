@@ -14,7 +14,7 @@
         android:text="Select your bluetooth device" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="15dip" />
+        android:textSize="15sp" />
 
     <!--<TextView-->
         <!--android:id="@+id/bluetoothDisabledMsg"-->
@@ -41,7 +41,7 @@
         android:text="Select your audio player" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="15dip"
+        android:textSize="15sp"
         android:paddingTop="25dip"
         android:layout_below="@id/bluetooth_device_spinner"/>
 
