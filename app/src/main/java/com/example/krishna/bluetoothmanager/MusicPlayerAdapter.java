@@ -37,7 +37,12 @@ public class MusicPlayerAdapter extends ArrayAdapter<MusicPlayer>{
 
         MusicPlayer musicPlayer = musicPlayers.get(position);
 
-        TextView musicPlayerName = (TextView)view.findViewById(R.id.music_player_name);
+        ImageView musicPlayerIcon = (ImageView)view.findViewById(R.id.dropdown_icon);
+        if(musicPlayer.getPlayerIcon() != null) {
+            musicPlayerIcon.setImageDrawable(musicPlayer.getPlayerIcon());
+        }
+
+        TextView musicPlayerName = (TextView)view.findViewById(R.id.dropdown_name);
         musicPlayerName.setText(musicPlayer.toString());
 
         return  view;
@@ -56,15 +61,13 @@ public class MusicPlayerAdapter extends ArrayAdapter<MusicPlayer>{
 
         MusicPlayer musicPlayer = musicPlayers.get(position);
 
-        ImageView musicPlayerIcon = (ImageView)view.findViewById(R.id.dropdown_music_player_icon);
+        ImageView musicPlayerIcon = (ImageView)view.findViewById(R.id.dropdown_item_icon);
         if(musicPlayer.getPlayerIcon() != null) {
             musicPlayerIcon.setImageDrawable(musicPlayer.getPlayerIcon());
         }
 
-        TextView musicPlayerName = (TextView)view.findViewById(R.id.dropdown_music_player_name);
+        TextView musicPlayerName = (TextView)view.findViewById(R.id.dropdown_item_name);
         musicPlayerName.setText(musicPlayer.toString());
-
-
 
         return  view;
     }

@@ -2,6 +2,7 @@ package com.example.krishna.bluetoothmanager;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.krishna.bluetoothmanager.data.object.BluetoothDev;
 import com.example.krishna.bluetoothmanager.data.object.DeviceMusicPlayerPair;
 import com.example.krishna.bluetoothmanager.data.object.MusicPlayer;
 
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner audioPlayerSpinner;
     private TextView bluetoothSelectMsg;
     private List<MusicPlayer> musicPlayers;
-    private List<String> pairedDevicesArray;
+    private List<BluetoothDev> pairedDevices;
     private boolean isBluetoothPermissionDenied;
 
     @Override
@@ -84,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
             bluetoothSelectMsg.setText("Select your bluetooth device");
             Set<BluetoothDevice> pairedBluetoothDevices = bluetoothAdapter.getBondedDevices();
             populateBluetoothDeviceNames(pairedBluetoothDevices);
-            ArrayAdapter<String> spinnerArrayAdapter =
-                    new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, pairedDevicesArray);
+            BluetoothDeviceAdapter spinnerArrayAdapter =
+                    new BluetoothDeviceAdapter(this, android.R.layout.simple_spinner_dropdown_item, pairedDevices);
             bluetoothSpinner.setAdapter(spinnerArrayAdapter);
         }
 
@@ -111,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
             bluetoothSelectMsg.setText("Select your bluetooth device");
             Set<BluetoothDevice> pairedBluetoothDevices = bluetoothAdapter.getBondedDevices();
             populateBluetoothDeviceNames(pairedBluetoothDevices);
-            ArrayAdapter<String> spinnerArrayAdapter =
-                    new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, pairedDevicesArray);
+            BluetoothDeviceAdapter spinnerArrayAdapter =
+                    new BluetoothDeviceAdapter(this, android.R.layout.simple_spinner_dropdown_item, pairedDevices);
             bluetoothSpinner.setAdapter(spinnerArrayAdapter);
         }
         else if(resultCode == RESULT_CANCELED)
@@ -140,15 +142,24 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        pairedDevicesArray = new ArrayList<>();
+        pairedDevices = new ArrayList<>();
         for(BluetoothDevice pairedDevice : pairedBluetoothDevices)
         {
-            pairedDevicesArray.add(pairedDevice.getName());
-        }
+//            switch (deviceClass)
+//            {
+//                case BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE:
+//
+//                    break;
+//                case BluetoothClass.Device.AUDIO_VIDEO_WEARABLE_HEADSET:
+//                    break;
+//                case BluetoothClass.Device.WEARABLE_WRIST_WATCH:
+//                    break;
+//            }
 
-//        ArrayAdapter<String> spinnerArrayAdapter =
-//                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, pairedDevicesArray);
-//        bluetoothSpinner.setAdapter(spinnerArrayAdapter);
+            BluetoothDev device = new BluetoothDev(pairedDevice.getName(),
+                    pairedDevice.getBluetoothClass().getDeviceClass());
+            pairedDevices.add(device);
+        }
     }
 
     private void populateMusicPlayers()
