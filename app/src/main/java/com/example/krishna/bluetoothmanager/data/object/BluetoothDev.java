@@ -4,12 +4,22 @@ package com.example.krishna.bluetoothmanager.data.object;
  * Created by Krishna on 10/13/2015.
  */
 public class BluetoothDev {
+    private String deviceAddress;
     private String deviceName;
     private int deviceType;
 
-    public BluetoothDev(String deviceName, int deviceType) {
+    public BluetoothDev(String deviceAddress, String deviceName, int deviceType) {
+        this.deviceAddress = deviceAddress;
         this.deviceName = deviceName;
         this.deviceType = deviceType;
+    }
+
+    public String getDeviceAddress() {
+        return deviceAddress;
+    }
+
+    public void setDeviceAddress(String deviceAddress) {
+        this.deviceAddress = deviceAddress;
     }
 
     public String getDeviceName() {

@@ -44,4 +44,23 @@ public class MusicPlayer {
     public String toString() {
         return playerName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MusicPlayer that = (MusicPlayer) o;
+
+        if (!playerName.equals(that.playerName)) return false;
+        return packageName.equals(that.packageName);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = playerName.hashCode();
+        result = 31 * result + packageName.hashCode();
+        return result;
+    }
 }

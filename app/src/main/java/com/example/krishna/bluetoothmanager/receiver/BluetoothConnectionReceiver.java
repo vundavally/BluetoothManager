@@ -8,8 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.widget.Toast;
+
+import com.example.krishna.bluetoothmanager.BluetoothDeviceMediaPlayerPairAdapter;
+import com.example.krishna.bluetoothmanager.data.BluetoothDBHelper;
+import com.example.krishna.bluetoothmanager.data.BluetoothDBUtils;
 
 import java.util.ArrayList;
 
@@ -49,9 +54,19 @@ public class BluetoothConnectionReceiver extends BroadcastReceiver {
 
     private String findMusicPlayerPackageNameForBluetoothDevice(Context context, BluetoothDevice bluetoothDevice) {
 
-        String bluetoothDeviceName = bluetoothDevice.getName();
-        SharedPreferences sharedPref = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        return sharedPref.getString(bluetoothDeviceName, NOT_FOUND);
+//        String bluetoothDeviceName = bluetoothDevice.getName();
+//        SharedPreferences sharedPref = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+//        return sharedPref.getString(bluetoothDeviceName, NOT_FOUND);
+
+        BluetoothDBHelper dbHelper = new BluetoothDBHelper(context);
+        Cursor cursor = BluetoothDBUtils.getMediaPlayerByDeviceAddress(dbHelper, bluetoothDevice.getAddress());
+        if(cursor.moveToFirst()) {
+            String mediaPlayerPackage = cursor.getString(BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_PACKAGE_NAME);
+            return mediaPlayerPackage;
+        } else
+        {
+            return NOT_FOUND;
+        }
     }
 
     private void openMusicPlayer(Context context, String packageName)

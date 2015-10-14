@@ -4,20 +4,20 @@ package com.example.krishna.bluetoothmanager.data.object;
  * Created by Krishna on 10/11/2015.
  */
 public class DeviceMusicPlayerPair {
-    private String bluetoothDeviceName;
+    private BluetoothDev bluetoothDev;
     private MusicPlayer musicPlayer;
 
-    public DeviceMusicPlayerPair(String bluetoothDeviceName, MusicPlayer musicPlayer) {
-        this.bluetoothDeviceName = bluetoothDeviceName;
+    public DeviceMusicPlayerPair(BluetoothDev bluetoothDev, MusicPlayer musicPlayer) {
+        this.bluetoothDev = bluetoothDev;
         this.musicPlayer = musicPlayer;
     }
 
-    public String getBluetoothDeviceName() {
-        return bluetoothDeviceName;
+    public BluetoothDev getBluetoothDevice() {
+        return bluetoothDev;
     }
 
-    public void setBluetoothDeviceName(String bluetoothDeviceName) {
-        this.bluetoothDeviceName = bluetoothDeviceName;
+    public void setBluetoothDevice(BluetoothDev bluetoothDev) {
+        this.bluetoothDev = bluetoothDev;
     }
 
     public MusicPlayer getMusicPlayer() {

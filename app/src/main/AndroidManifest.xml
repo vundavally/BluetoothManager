@@ -3,7 +3,7 @@
     package="com.example.krishna.bluetoothmanager" >
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <application
         android:allowBackup="true"
@@ -27,10 +27,28 @@
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
-                <action android:name="android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED"/>
-
+                <action android:name="android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".PairNewBluetoothDeviceActivity"
+            android:label="@string/title_activity_pair_new_bluetooth_device"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krishna.bluetoothmanager.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ModifyBluetoothDevicePairActivity"
+            android:label="@string/title_activity_modify_bluetooth_device_pair"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krishna.bluetoothmanager.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
