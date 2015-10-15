@@ -74,6 +74,7 @@ public class BluetoothDeviceMediaPlayerPairAdapter extends CursorAdapter {
         String mediaPlayerName = cursor.getString(COL_MEDIA_PLAYER_NAME);
         TextView mediaPlayerNameView = (TextView)view.findViewById(R.id.list_item_media_player_name);
         mediaPlayerNameView.setText(mediaPlayerName);
-
     }
+
+
 }

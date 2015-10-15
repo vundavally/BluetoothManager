@@ -2,22 +2,20 @@ package com.example.krishna.bluetoothmanager;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.krishna.bluetoothmanager.data.BluetoothDBHelper;
 import com.example.krishna.bluetoothmanager.data.BluetoothDBUtils;
@@ -31,7 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class PairNewBluetoothDeviceActivity extends AppCompatActivity {
+public class NewBluetoothDevicePairActivity extends AppCompatActivity {
 
     public  static  final String PREF_FILE_NAME = "BLUETOOTH_MANAGER_SHARED_PREFS";
     public static final int REQUEST_ENABLE_BT = 1;
@@ -46,7 +44,7 @@ public class PairNewBluetoothDeviceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pair_new_bluetooth_device);
+        setContentView(R.layout.new_bluetooth_device_pair);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -120,11 +118,15 @@ public class PairNewBluetoothDeviceActivity extends AppCompatActivity {
         }
 
         pairedDevices = new ArrayList<>();
+
+        BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
+        Cursor cursor = BluetoothDBUtils.getBluetoothMediaPairs(dbHelper);
         for(BluetoothDevice pairedDevice : pairedBluetoothDevices)
         {
             BluetoothDev device = new BluetoothDev(pairedDevice.getAddress(), pairedDevice.getName(),
                     pairedDevice.getBluetoothClass().getDeviceClass());
             pairedDevices.add(device);
+
         }
     }
 
@@ -179,19 +181,20 @@ public class PairNewBluetoothDeviceActivity extends AppCompatActivity {
 
         DeviceMusicPlayerPair deviceMusicPlayerPair = new DeviceMusicPlayerPair(selectedBluetoothDevice, selectedMusicPlayer);
 
-//        SharedPreferences sharedPref = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//        //TODO try to save all the object using JSON
-//        //Reference: http://stackoverflow.com/questions/7145606/how-android-sharedpreferences-save-store-object
-//        editor.putString(selectedBluetoothDevice.getDeviceName(), selectedMusicPlayer.getPackageName());
-//        editor.commit();
-
-//        deleteDatabase(BluetoothDBHelper.DATABASE_NAME);
         BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
         long result = BluetoothDBUtils.insertBluetoothMediaPair(dbHelper, deviceMusicPlayerPair);
 
-        Snackbar.make(view, selectedBluetoothDevice.getDeviceName() + " is paired with " + selectedMusicPlayer.toString(), Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        if(result > 0)
+        {
+            Toast.makeText(this, selectedBluetoothDevice.getDeviceName()
+                    + " is paired with " + selectedMusicPlayer.toString(), Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK, getIntent());
+            finish();
+        }
+        else {
+            Toast.makeText(this, "Error occurred while adding your " +
+                    "media player preference.", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
