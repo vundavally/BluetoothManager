@@ -12,7 +12,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +40,10 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
     private Spinner bluetoothSpinner;
     private Spinner audioPlayerSpinner;
     private TextView bluetoothSelectMsg;
+    private SeekBar mVolumeSeekBar;
     private List<MusicPlayer> musicPlayers;
     private List<BluetoothDev> pairedDevices;
+    private List<BluetoothDev> mStoredBluetoothDevices;
     private boolean isBluetoothPermissionDenied;
 
     @Override
@@ -47,12 +52,15 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
         setContentView(R.layout.new_bluetooth_device_pair);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bluetoothSelectMsg = (TextView)findViewById(R.id.bluetoothSelectLabel);
         //create bluetooth adapter
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         //TODO Check if bluetooth adapter is null and handle the cases for the devices that don't have bluetooth
         bluetoothSpinner = (Spinner) findViewById(R.id.bluetooth_device_spinner);
+
+        mStoredBluetoothDevices = getStoredBluetoothDevicesFromCursor( );
         if(bluetoothAdapter.isEnabled() == false && isBluetoothPermissionDenied == false)
         {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -78,6 +86,33 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
                 new MusicPlayerAdapter(this, R.layout.spinner_item, musicPlayers);
         audioArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         audioPlayerSpinner.setAdapter(audioArrayAdapter);
+
+        mVolumeSeekBar = (SeekBar)findViewById(R.id.volume_seek_bar);
+
+    }
+
+    private List<BluetoothDev> getStoredBluetoothDevicesFromCursor( ) {
+        List<BluetoothDev> storedBluetoothDevices = new ArrayList<>();
+
+        BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
+        Cursor cursor = BluetoothDBUtils.getBluetoothMediaPairs(dbHelper);
+
+        while(cursor.moveToNext())
+        {
+            String bluetoothDeviceAddress = cursor.getString(
+                    BluetoothDeviceMediaPlayerPairAdapter.COL_BLUETOOTH_DEVICE_ADDRESS);
+            String bluetoothDeviceName = cursor.getString(
+                    BluetoothDeviceMediaPlayerPairAdapter.COL_BLUETOOTH_DEVICE_NAME);
+            int bluetoothDeviceType = cursor.getInt(
+                    BluetoothDeviceMediaPlayerPairAdapter.COL_BLUETOOTH_DEVICE_TYPE);
+
+            BluetoothDev storeBluetoothDevice = new BluetoothDev(
+                    bluetoothDeviceAddress, bluetoothDeviceName, bluetoothDeviceType);
+            storedBluetoothDevices.add(storeBluetoothDevice);
+        }
+
+
+        return storedBluetoothDevices;
     }
 
     @Override
@@ -125,6 +160,12 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
         {
             BluetoothDev device = new BluetoothDev(pairedDevice.getAddress(), pairedDevice.getName(),
                     pairedDevice.getBluetoothClass().getDeviceClass());
+
+            if(mStoredBluetoothDevices.contains(device))
+            {
+                continue;
+            }
+
             pairedDevices.add(device);
 
         }
@@ -147,16 +188,16 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
             String musicPlayerPackageName = musicPlayerInfo.activityInfo.packageName;
 
             Drawable drawable = musicPlayerInfo.loadIcon(packageManager);
+            Log.v("hello1", "here is the message");
 
 
-
-            try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(musicPlayerPackageName, PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES);
-
-                ActivityInfo[] activites = packageInfo.activities;
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                PackageInfo packageInfo = packageManager.getPackageInfo(musicPlayerPackageName, PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES);
+//
+//                ActivityInfo[] activites = packageInfo.activities;
+//            } catch (PackageManager.NameNotFoundException e) {
+//                e.printStackTrace();
+//            }
 
             MusicPlayer musicPlayer = new MusicPlayer(musicPlayerName, musicPlayerPackageName, drawable);
             musicPlayers.add(musicPlayer);
@@ -178,6 +219,9 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
     {
         BluetoothDev selectedBluetoothDevice = (BluetoothDev)bluetoothSpinner.getSelectedItem();
         MusicPlayer selectedMusicPlayer = (MusicPlayer)audioPlayerSpinner.getSelectedItem();
+
+        // Update the volume of the music player.
+        selectedMusicPlayer.setPlayerVolume(mVolumeSeekBar.getProgress());
 
         DeviceMusicPlayerPair deviceMusicPlayerPair = new DeviceMusicPlayerPair(selectedBluetoothDevice, selectedMusicPlayer);
 

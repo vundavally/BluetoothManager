@@ -10,11 +10,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.example.krishna.bluetoothmanager.BluetoothDeviceMediaPlayerPairAdapter;
 import com.example.krishna.bluetoothmanager.data.BluetoothDBHelper;
 import com.example.krishna.bluetoothmanager.data.BluetoothDBUtils;
+import com.example.krishna.bluetoothmanager.data.object.MusicPlayer;
 
 import java.util.ArrayList;
 
@@ -34,38 +37,40 @@ public class BluetoothConnectionReceiver extends BroadcastReceiver {
         {
             if(intent.getIntExtra("android.bluetooth.adapter.extra.CONNECTION_STATE", 0) == BluetoothAdapter.STATE_CONNECTED) {
                 BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String packageName = findMusicPlayerPackageNameForBluetoothDevice(context, bluetoothDevice);
+                MusicPlayer mediaPlayer = findMusicPlayerForBluetoothDevice(context, bluetoothDevice);
 
-                if(packageName.equals(NOT_FOUND)) {
+                if(mediaPlayer == null) {
                     Toast.makeText(context, "Music player not paired for this device.", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                openMusicPlayer(context, packageName);
-                setMaxVolume(context);
+                openMusicPlayer(context, mediaPlayer.getPackageName());
+                setMusicPlayerVolume(context, mediaPlayer.getPlayerVolume());
             }
             else if(intent.getIntExtra("android.bluetooth.adapter.extra.PREVIOUS_CONNECTION_STATE", 0) == BluetoothAdapter.STATE_CONNECTED) {
-                setMinVolume(context);
+//                setMinVolume(context);
             }
 
         }
 
     }
 
-    private String findMusicPlayerPackageNameForBluetoothDevice(Context context, BluetoothDevice bluetoothDevice) {
-
-//        String bluetoothDeviceName = bluetoothDevice.getName();
-//        SharedPreferences sharedPref = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-//        return sharedPref.getString(bluetoothDeviceName, NOT_FOUND);
+    private MusicPlayer findMusicPlayerForBluetoothDevice(Context context, BluetoothDevice bluetoothDevice) {
 
         BluetoothDBHelper dbHelper = new BluetoothDBHelper(context);
         Cursor cursor = BluetoothDBUtils.getMediaPlayerByDeviceAddress(dbHelper, bluetoothDevice.getAddress());
         if(cursor.moveToFirst()) {
-            String mediaPlayerPackage = cursor.getString(BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_PACKAGE_NAME);
-            return mediaPlayerPackage;
+            String mediaPlayerPackage = cursor.getString(
+                    BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_PACKAGE_NAME);
+            String mediaPlayerName = cursor.getString(
+                    BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_NAME);
+            int mediaPlayerVolume = cursor.getInt(
+                    BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_VOLUME);
+
+            return new MusicPlayer(mediaPlayerName, mediaPlayerPackage, mediaPlayerVolume);
         } else
         {
-            return NOT_FOUND;
+            return null;
         }
     }
 
@@ -96,10 +101,12 @@ public class BluetoothConnectionReceiver extends BroadcastReceiver {
         activityManager.killBackgroundProcesses(packageName);
     }
 
-    public void setMaxVolume(Context context) {
+    public void setMusicPlayerVolume(Context context, int musicPlayerVolume) {
         AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_SHOW_UI);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+//        float volumeControlPercent = (musicPlayerVolume / 100);
+        int currentVolumeToSet = (int) ((maxVolume * musicPlayerVolume)/100);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, musicPlayerVolume, AudioManager.FLAG_SHOW_UI);
     }
 
     public void setMinVolume(Context context) {

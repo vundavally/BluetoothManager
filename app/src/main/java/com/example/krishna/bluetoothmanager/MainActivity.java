@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.example.krishna.bluetoothmanager.data.BluetoothDBHelper;
 import com.example.krishna.bluetoothmanager.data.BluetoothDBUtils;
@@ -65,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                             cursor.getString(BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_NAME));
                     intent.putExtra("MediaPlayerPackageName",
                             cursor.getString(BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_PACKAGE_NAME));
+                    intent.putExtra("MediaPlayerVolume",
+                            cursor.getInt(BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_VOLUME));
                     startActivityForResult(intent, MODIFY_REQUEST_CODE);
                 }
 
@@ -122,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
-
     }
 
     @Override

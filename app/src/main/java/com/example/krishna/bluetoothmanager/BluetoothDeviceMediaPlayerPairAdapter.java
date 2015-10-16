@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Krishna on 10/13/2015.
@@ -24,6 +23,7 @@ public class BluetoothDeviceMediaPlayerPairAdapter extends CursorAdapter {
     public static final int COL_BLUETOOTH_DEVICE_TYPE = 3;
     public static final int COL_MEDIA_PLAYER_NAME = 4;
     public static final int COL_MEDIA_PLAYER_PACKAGE_NAME = 5;
+    public static final int COL_MEDIA_PLAYER_VOLUME = 6;
 
     public BluetoothDeviceMediaPlayerPairAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -74,6 +74,23 @@ public class BluetoothDeviceMediaPlayerPairAdapter extends CursorAdapter {
         String mediaPlayerName = cursor.getString(COL_MEDIA_PLAYER_NAME);
         TextView mediaPlayerNameView = (TextView)view.findViewById(R.id.list_item_media_player_name);
         mediaPlayerNameView.setText(mediaPlayerName);
+
+        int progress = cursor.getInt(COL_MEDIA_PLAYER_VOLUME);
+        SeekBar seekBar = (SeekBar)view.findViewById(R.id.volume_seek_bar);
+        seekBar.setProgress(progress);
+        seekBar.setClickable(false);
+        seekBar.setFocusable(false);
+        seekBar.setEnabled(false);
+
+        // Change volume icon if progress is zero.
+        ImageView volumeIcon = (ImageView)view.findViewById(R.id.volume_icon_id);
+
+        if(progress > 0){
+            volumeIcon.setImageResource(R.mipmap.ic_volume_up);
+        }
+        else {
+            volumeIcon.setImageResource(R.mipmap.ic_volume_off);
+        }
     }
 
 

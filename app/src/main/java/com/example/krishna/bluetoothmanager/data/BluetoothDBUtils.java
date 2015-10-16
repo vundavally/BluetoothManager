@@ -27,6 +27,8 @@ public class BluetoothDBUtils {
                 deviceMusicPlayerPair.getMusicPlayer().getPlayerName());
         values.put(BluetoothMediaPairEntry.COLUMN_MEDIA_PLAYER_PACKAGE_NAME,
                 deviceMusicPlayerPair.getMusicPlayer().getPackageName());
+        values.put(BluetoothMediaPairEntry.COLUMN_MEDIA_PLAYER_VOLUME,
+                deviceMusicPlayerPair.getMusicPlayer().getPlayerVolume());
 
         long newRowId = db.insert(BluetoothMediaPairEntry.TABLE_NAME, null, values);
         return newRowId;
@@ -67,6 +69,8 @@ public class BluetoothDBUtils {
                 deviceMusicPlayerPair.getMusicPlayer().getPlayerName());
         values.put(BluetoothMediaPairEntry.COLUMN_MEDIA_PLAYER_PACKAGE_NAME,
                 deviceMusicPlayerPair.getMusicPlayer().getPackageName());
+        values.put(BluetoothMediaPairEntry.COLUMN_MEDIA_PLAYER_VOLUME,
+                deviceMusicPlayerPair.getMusicPlayer().getPlayerVolume());
 
         String whereClause = BluetoothMediaPairEntry.COLUMN_BLUETOOTH_DEVICE_ADDRESS + " LIKE ?";
         String[] whereClauseArgs = { deviceMusicPlayerPair.getBluetoothDevice().getDeviceAddress() };

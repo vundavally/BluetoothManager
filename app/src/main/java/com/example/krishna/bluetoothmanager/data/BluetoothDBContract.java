@@ -14,5 +14,6 @@ public class BluetoothDBContract {
         public static final String COLUMN_BLUETOOTH_DEVICE_TYPE = "bluetooth_device_type";
         public static final String COLUMN_MEDIA_PLAYER_NAME = "media_player_name";
         public static final String COLUMN_MEDIA_PLAYER_PACKAGE_NAME = "media_player_package_name";
+        public static final String COLUMN_MEDIA_PLAYER_VOLUME = "media_player_volume";
     }
 }

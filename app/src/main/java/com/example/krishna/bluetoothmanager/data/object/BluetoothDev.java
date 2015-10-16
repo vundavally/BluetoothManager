@@ -37,4 +37,20 @@ public class BluetoothDev {
     public void setDeviceType(int deviceType) {
         this.deviceType = deviceType;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BluetoothDev that = (BluetoothDev) o;
+
+        return deviceAddress.equals(that.deviceAddress);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return deviceAddress.hashCode();
+    }
 }

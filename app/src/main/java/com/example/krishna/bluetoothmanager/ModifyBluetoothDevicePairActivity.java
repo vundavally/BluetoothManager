@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
 
     private Spinner bluetoothSpinner;
     private Spinner audioPlayerSpinner;
+    private SeekBar mVolumeSeekBar;
     private List<MusicPlayer> musicPlayers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +41,6 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
         setContentView(R.layout.modify_bluetooth_device_pair);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent modifyIntent = getIntent();
@@ -56,6 +49,7 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
         int bluetoothDeviceType = modifyIntent.getIntExtra("BluetoothDeviceType", -1);
         String mediaPlayerName = modifyIntent.getStringExtra("MediaPlayerName");
         String mediaPlayerPackage = modifyIntent.getStringExtra("MediaPlayerPackageName");
+        int mediaPlayerVolume = modifyIntent.getIntExtra("MediaPlayerVolume", 7);
         Drawable mediaPlayerDrawable = null;
         try {
             mediaPlayerDrawable = getPackageManager().getApplicationIcon(mediaPlayerPackage);
@@ -82,6 +76,9 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
                     new MusicPlayer(mediaPlayerName, mediaPlayerPackage, mediaPlayerDrawable));
             audioPlayerSpinner.setSelection(position);
         }
+
+        mVolumeSeekBar = (SeekBar) findViewById(R.id.volume_seek_bar);
+        mVolumeSeekBar.setProgress(mediaPlayerVolume);
     }
 
     /**
@@ -97,18 +94,8 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
         for (ResolveInfo musicPlayerInfo : musicPlayersInfo) {
 
             String musicPlayerName = musicPlayerInfo.loadLabel(packageManager).toString();
-
             String musicPlayerPackageName = musicPlayerInfo.activityInfo.packageName;
-
             Drawable drawable = musicPlayerInfo.loadIcon(packageManager);
-
-            try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(musicPlayerPackageName, PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES);
-
-                ActivityInfo[] activites = packageInfo.activities;
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
 
             MusicPlayer musicPlayer = new MusicPlayer(musicPlayerName, musicPlayerPackageName, drawable);
             musicPlayers.add(musicPlayer);
@@ -126,6 +113,8 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
     {
         BluetoothDev selectedBluetoothDevice = (BluetoothDev)bluetoothSpinner.getSelectedItem();
         MusicPlayer selectedMusicPlayer = (MusicPlayer)audioPlayerSpinner.getSelectedItem();
+        // Update music player volume
+        selectedMusicPlayer.setPlayerVolume(mVolumeSeekBar.getProgress());
 
         DeviceMusicPlayerPair deviceMusicPlayerPair = new DeviceMusicPlayerPair(selectedBluetoothDevice, selectedMusicPlayer);
 

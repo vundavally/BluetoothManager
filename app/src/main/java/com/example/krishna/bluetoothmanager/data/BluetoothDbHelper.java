@@ -10,7 +10,7 @@ import com.example.krishna.bluetoothmanager.data.BluetoothDBContract.BluetoothMe
  */
 public class BluetoothDBHelper extends SQLiteOpenHelper{
 
-    private static final int DTABASE_VERSION = 2;
+    private static final int DTABASE_VERSION = 3;
 
     public static final String DATABASE_NAME = "bluetoothkv.db";
 
@@ -29,7 +29,8 @@ public class BluetoothDBHelper extends SQLiteOpenHelper{
                 + BluetoothMediaPairEntry.COLUMN_BLUETOOTH_DEVICE_NAME + " TEXT NOT NULL, "
                 + BluetoothMediaPairEntry.COLUMN_BLUETOOTH_DEVICE_TYPE + " INTEGER NOT NULL, "
                 + BluetoothMediaPairEntry.COLUMN_MEDIA_PLAYER_NAME + " TEXT NOT NULL, "
-                + BluetoothMediaPairEntry.COLUMN_MEDIA_PLAYER_PACKAGE_NAME + " TEXT NOT NULL);";
+                + BluetoothMediaPairEntry.COLUMN_MEDIA_PLAYER_PACKAGE_NAME + " TEXT NOT NULL, "
+                + BluetoothMediaPairEntry.COLUMN_MEDIA_PLAYER_VOLUME + " INTEGER NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_TABLE_BLUETOOTH_MEDIA_PAIR);
     }
