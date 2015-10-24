@@ -50,7 +50,7 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_bluetooth_device_pair);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_new);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -188,16 +188,6 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
             String musicPlayerPackageName = musicPlayerInfo.activityInfo.packageName;
 
             Drawable drawable = musicPlayerInfo.loadIcon(packageManager);
-            Log.v("hello1", "here is the message");
-
-
-//            try {
-//                PackageInfo packageInfo = packageManager.getPackageInfo(musicPlayerPackageName, PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES);
-//
-//                ActivityInfo[] activites = packageInfo.activities;
-//            } catch (PackageManager.NameNotFoundException e) {
-//                e.printStackTrace();
-//            }
 
             MusicPlayer musicPlayer = new MusicPlayer(musicPlayerName, musicPlayerPackageName, drawable);
             musicPlayers.add(musicPlayer);

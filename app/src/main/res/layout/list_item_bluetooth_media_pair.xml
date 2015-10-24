@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
-    android:background="@drawable/list_item_selector" >
+    android:background="@drawable/list_item_selector"
+    android:elevation="4dp">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -20,8 +21,8 @@
         android:gravity="center_vertical">
     <ImageView
         android:id="@+id/list_item_bluetooth_device_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"/>
 
     <TextView
         android:id="@+id/list_item_bluetooth_device_name"
@@ -40,8 +41,8 @@
 
         <ImageView
             android:id="@+id/list_item_media_player_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"/>
 
         <TextView
             android:id="@+id/list_item_media_player_name"
@@ -59,8 +60,8 @@
 
         <ImageView
             android:id="@+id/volume_icon_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:src="@mipmap/ic_volume_up"/>
 
         <SeekBar

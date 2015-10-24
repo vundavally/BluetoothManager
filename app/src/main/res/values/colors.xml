@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorActivityBg">#FAFAFA</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF0000</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF0000</color>-->
+
+    <color name="colorPrimary">#03A9F4</color> <!-- 500 -->
+    <color name="colorPrimaryDark">#0288D1</color> <!-- 700 -->
+    <color name="colorPrimaryLight">#B3E5FC</color> <!-- 100 -->
+    <color name="colorAccent">#FFD740</color> <!-- A -->
+    <color name="activated">#E0E0E0</color>
+
     <color name="colorListItem">#E8EAF6</color>
     <color name="colorListItemSelected">#9FA8DA</color>
 </resources>

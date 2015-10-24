@@ -1,9 +1,14 @@
 package com.example.krishna.bluetoothmanager;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
@@ -33,15 +38,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), NewBluetoothDevicePairActivity.class);
-                startActivityForResult(intent, ADD_REQUEST_CODE);
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getApplicationContext(), NewBluetoothDevicePairActivity.class);
+//                startActivityForResult(intent, ADD_REQUEST_CODE);
+//                ContextCompat.startActivities(getApplicationContext(), new Intent[]{intent}, activityOptions.toBundle());
+//
+//
+////                ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
+//            }
+//        });
 
         mDbHelper = new BluetoothDBHelper(this);
         mCursor = BluetoothDBUtils.getBluetoothMediaPairs(mDbHelper);
@@ -128,6 +139,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void launchPairNewDeviceIntent(View view)
+    {
+        Intent intent = new Intent(this, NewBluetoothDevicePairActivity.class);
+//        startActivityForResult(intent, ADD_REQUEST_CODE);
+        ActivityOptionsCompat activityOptions =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+
+        ActivityCompat.startActivityForResult(this, intent, ADD_REQUEST_CODE, activityOptions.toBundle());
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -135,8 +156,7 @@ public class MainActivity extends AppCompatActivity {
         if((requestCode == ADD_REQUEST_CODE || requestCode == MODIFY_REQUEST_CODE)
                 && resultCode == RESULT_OK)
         {
-            BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
-            mCursor = BluetoothDBUtils.getBluetoothMediaPairs(dbHelper);
+            mCursor = BluetoothDBUtils.getBluetoothMediaPairs(mDbHelper);
             mAdapter.swapCursor(mCursor);
             mAdapter.notifyDataSetChanged();
         }
@@ -145,8 +165,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
-        mCursor = BluetoothDBUtils.getBluetoothMediaPairs(dbHelper);
+        mCursor = BluetoothDBUtils.getBluetoothMediaPairs(mDbHelper);
         mAdapter.swapCursor(mCursor);
         mAdapter.notifyDataSetChanged();
     }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="sequential"
+    android:duration="300">
+
+    <fade xmlns:android="http://schemas.android.com/apk/res/android">
+        <targets>
+            <target android:excludeId="@android:id/statusBarBackground"/>
+            <target android:excludeId="@android:id/navigationBarBackground"/>
+        </targets>
+    </fade>
+
+
+    <!--<slide android:slideEdge="top">-->
+        <!--<targets>-->
+            <!--<target android:targetId="@id/toolbar_new" />-->
+        <!--</targets>-->
+    <!--</slide>-->
+    <!--<slide android:slideEdge="bottom">-->
+        <!--<targets>-->
+            <!--<target android:targetId="@id/pair_button" />-->
+            <!--<target android:targetId="@id/audio_player_spinner" />-->
+            <!--<target android:targetId="@id/volume_icon_id" />-->
+            <!--<target android:targetId="@id/volume_seek_bar" />-->
+            <!--<target android:targetId="@id/audioPlayerSelectLabel" />-->
+            <!--<target android:targetId="@id/bluetooth_device_spinner" />-->
+            <!--<target android:targetId="@id/bluetoothSelectLabel" />-->
+        <!--</targets>-->
+    <!--</slide>-->
+
+    <!--<slide android:slideEdge="right">-->
+        <!--<targets>-->
+            <!--<target android:targetId="@id/audio_player_spinner" />-->
+        <!--</targets>-->
+    <!--</slide>-->
+
+</transitionSet>
