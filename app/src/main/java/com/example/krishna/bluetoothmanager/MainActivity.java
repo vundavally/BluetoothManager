@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.View;
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothDeviceMediaPlayerPairAdapter mAdapter;
     private Cursor mCursor;
     private BluetoothDbHelper mDbHelper;
+    private RecyclerView mRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,32 +38,13 @@ public class MainActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getApplicationContext(), NewBluetoothDevicePairActivity.class);
-//                startActivityForResult(intent, ADD_REQUEST_CODE);
-//                ContextCompat.startActivities(getApplicationContext(), new Intent[]{intent}, activityOptions.toBundle());
-//
-//
-////                ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
-//            }
-//        });
 
         mDbHelper = new BluetoothDbHelper(this);
         mCursor = BluetoothDBUtils.getBluetoothMediaPairs(mDbHelper);
-        mAdapter = new BluetoothDeviceMediaPlayerPairAdapter(this, mCursor, 0);
-        final ListView listView = (ListView)findViewById(R.id.listview_bluetooth_media_pair);
-        listView.setAdapter(mAdapter);
-
-
-        AdapterView.OnItemClickListener listViewItemClickListener = new AdapterView.OnItemClickListener() {
+        mAdapter = new BluetoothDeviceMediaPlayerPairAdapter(this, new BluetoothDeviceMediaPlayerPairAdapter.BluetoothDeviceAdapterOnclickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Cursor cursor = (Cursor)adapterView.getItemAtPosition(position);
+            public void onClick(BluetoothDeviceMediaPlayerPairAdapter.ViewHolder viewHolder, Cursor cursor) {
+
                 if(cursor != null)
                 {
                     Intent intent = new Intent(getApplicationContext(), ModifyBluetoothDevicePairActivity.class);
@@ -76,67 +62,44 @@ public class MainActivity extends AppCompatActivity {
                             cursor.getInt(BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_VOLUME));
                     startActivityForResult(intent, MODIFY_REQUEST_CODE);
                 }
-
             }
-        };
-        listView.setOnItemClickListener(listViewItemClickListener);
+        });
 
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                final int checkedCount = listView.getCheckedItemCount();
-                mode.setTitle(checkedCount + " selected");
-            }
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_bluetooth_media_pair);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter);
 
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.menu_main1, menu);
-                return true;
-            }
 
+        // init swipe to dismiss logic
+        ItemTouchHelper swipeToDismissTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                // callback for drag-n-drop, false to skip this feature
                 return false;
             }
 
             @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.delete:
-                        SparseBooleanArray itemsSelected = listView.getCheckedItemPositions();
-                        for (int i = 0; i < listView.getCount(); i++) {
-                            if (itemsSelected.get(i)) {
-                                Cursor listItemCursor = (Cursor) mAdapter.getItem(i);
-                                String bluetoothDeviceAddress = listItemCursor.getString(
-                                        BluetoothDeviceMediaPlayerPairAdapter.COL_BLUETOOTH_DEVICE_ADDRESS);
-                                BluetoothDBUtils.deleteBluetoothMediaPair(mDbHelper, bluetoothDeviceAddress);
-                            }
-                        }
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                // callback for swipe to dismiss, removing item from data and adapter
+                Cursor listItemCursor = mAdapter.getCursor();
+                listItemCursor.moveToPosition(viewHolder.getAdapterPosition());
 
+                String bluetoothDeviceAddress = listItemCursor.getString(
+                        BluetoothDeviceMediaPlayerPairAdapter.COL_BLUETOOTH_DEVICE_ADDRESS);
+                BluetoothDBUtils.deleteBluetoothMediaPair(mDbHelper, bluetoothDeviceAddress);
 
-                        mode.finish();
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                // Update list_view adapter
                 mCursor = BluetoothDBUtils.getBluetoothMediaPairs(mDbHelper);
                 mAdapter.swapCursor(mCursor);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }
         });
+        swipeToDismissTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     public void launchPairNewDeviceIntent(View view)
     {
         Intent intent = new Intent(this, NewBluetoothDevicePairActivity.class);
-//        startActivityForResult(intent, ADD_REQUEST_CODE);
         ActivityOptionsCompat activityOptions =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this);
 
