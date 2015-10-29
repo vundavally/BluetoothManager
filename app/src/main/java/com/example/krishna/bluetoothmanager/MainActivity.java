@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         // init swipe to dismiss logic
         ItemTouchHelper swipeToDismissTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 // callback for drag-n-drop, false to skip this feature
@@ -82,6 +82,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 // callback for swipe to dismiss, removing item from data and adapter
+
+                if(direction != ItemTouchHelper.RIGHT)
+                {
+                    return;
+                }
+                
                 Cursor listItemCursor = mAdapter.getCursor();
                 listItemCursor.moveToPosition(viewHolder.getAdapterPosition());
 
