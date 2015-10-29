@@ -34,5 +34,9 @@
         <item name="backgroundSplit">@color/colorAccent</item>
     </style>
 
+    <style name="CustomHorizontalProgressbar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+    </style>
+
 
 </resources>

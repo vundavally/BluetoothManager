@@ -12,7 +12,7 @@ import com.example.krishna.bluetoothmanager.data.object.DeviceMusicPlayerPair;
  */
 public class BluetoothDBUtils {
 
-    public static long insertBluetoothMediaPair(BluetoothDBHelper dbHelper, DeviceMusicPlayerPair deviceMusicPlayerPair)
+    public static long insertBluetoothMediaPair(BluetoothDbHelper dbHelper, DeviceMusicPlayerPair deviceMusicPlayerPair)
     {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -34,7 +34,7 @@ public class BluetoothDBUtils {
         return newRowId;
     }
 
-    public static Cursor getBluetoothMediaPairs(BluetoothDBHelper dbHelper)
+    public static Cursor getBluetoothMediaPairs(BluetoothDbHelper dbHelper)
     {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -42,7 +42,7 @@ public class BluetoothDBUtils {
         return cursor;
     }
 
-    public static Cursor getMediaPlayerByDeviceAddress(BluetoothDBHelper dbHelper, String bluetoothDeviceAddress)
+    public static Cursor getMediaPlayerByDeviceAddress(BluetoothDbHelper dbHelper, String bluetoothDeviceAddress)
     {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String whereClause = BluetoothMediaPairEntry.COLUMN_BLUETOOTH_DEVICE_ADDRESS + " LIKE ?";
@@ -51,7 +51,7 @@ public class BluetoothDBUtils {
         return cursor;
     }
 
-    public static int deleteBluetoothMediaPair(BluetoothDBHelper dbHelper, String bluetoothDeviceAddress)
+    public static int deleteBluetoothMediaPair(BluetoothDbHelper dbHelper, String bluetoothDeviceAddress)
     {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String whereClause = BluetoothMediaPairEntry.COLUMN_BLUETOOTH_DEVICE_ADDRESS + " LIKE ?";
@@ -60,7 +60,7 @@ public class BluetoothDBUtils {
         return numberOfRowsDeleted;
     }
 
-    public static int updateBluetoothMediaPair(BluetoothDBHelper dbHelper, DeviceMusicPlayerPair deviceMusicPlayerPair)
+    public static int updateBluetoothMediaPair(BluetoothDbHelper dbHelper, DeviceMusicPlayerPair deviceMusicPlayerPair)
     {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 

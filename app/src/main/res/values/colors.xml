@@ -5,12 +5,23 @@
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <!--<color name="colorAccent">#FF0000</color>-->
 
-    <color name="colorPrimary">#03A9F4</color> <!-- 500 -->
-    <color name="colorPrimaryDark">#0288D1</color> <!-- 700 -->
-    <color name="colorPrimaryLight">#B3E5FC</color> <!-- 100 -->
-    <color name="colorAccent">#FFD740</color> <!-- A -->
+    <!--<color name="colorPrimary">#00BCD4</color> &lt;!&ndash; 500 &ndash;&gt;-->
+    <!--<color name="colorPrimaryDark">#0097A7</color> &lt;!&ndash; 700 &ndash;&gt;-->
+    <!--<color name="colorPrimaryLight">#B2EBF2</color> &lt;!&ndash; 100 &ndash;&gt;-->
+    <!--<color name="colorAccent">#18FFFF</color> &lt;!&ndash; A &ndash;&gt;-->
     <color name="activated">#E0E0E0</color>
 
     <color name="colorListItem">#E8EAF6</color>
     <color name="colorListItemSelected">#9FA8DA</color>
+
+
+
+    <color name="colorPrimary">#4CAF50</color>
+    <color name="colorPrimaryDark">#388E3C</color>
+    <color name="colorPrimaryLight">#C8E6C9</color>
+    <color name="colorAccent">#FF9800</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
 </resources>

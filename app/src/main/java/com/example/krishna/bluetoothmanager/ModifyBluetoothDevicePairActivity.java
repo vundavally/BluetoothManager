@@ -1,16 +1,10 @@
 package com.example.krishna.bluetoothmanager;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,7 +12,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.krishna.bluetoothmanager.data.BluetoothDBHelper;
+import com.example.krishna.bluetoothmanager.data.BluetoothDbHelper;
 import com.example.krishna.bluetoothmanager.data.BluetoothDBUtils;
 import com.example.krishna.bluetoothmanager.data.object.BluetoothDev;
 import com.example.krishna.bluetoothmanager.data.object.DeviceMusicPlayerPair;
@@ -118,7 +112,7 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
 
         DeviceMusicPlayerPair deviceMusicPlayerPair = new DeviceMusicPlayerPair(selectedBluetoothDevice, selectedMusicPlayer);
 
-        BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
+        BluetoothDbHelper dbHelper = new BluetoothDbHelper(this);
         long numberOfRowsAffected = BluetoothDBUtils.updateBluetoothMediaPair(dbHelper, deviceMusicPlayerPair);
 
         if(numberOfRowsAffected > 0) {

@@ -16,17 +16,17 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@mipmap/ic_launcher"
-                android:scaleType="center"/>
+            <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:src="@mipmap/ic_launcher"-->
+                <!--android:scaleType="center"/>-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Bluetooth Manager"
                 android:gravity="center"
-                android:textStyle="bold"
+                android:textStyle="normal|italic"
                 android:textSize="25sp"/>
         </android.support.v7.widget.Toolbar>
 

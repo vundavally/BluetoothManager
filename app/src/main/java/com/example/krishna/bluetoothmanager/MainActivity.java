@@ -1,14 +1,10 @@
 package com.example.krishna.bluetoothmanager;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
@@ -19,10 +15,8 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.SeekBar;
-import android.widget.Toast;
 
-import com.example.krishna.bluetoothmanager.data.BluetoothDBHelper;
+import com.example.krishna.bluetoothmanager.data.BluetoothDbHelper;
 import com.example.krishna.bluetoothmanager.data.BluetoothDBUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MODIFY_REQUEST_CODE = 2;
     private BluetoothDeviceMediaPlayerPairAdapter mAdapter;
     private Cursor mCursor;
-    private BluetoothDBHelper mDbHelper;
+    private BluetoothDbHelper mDbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        mDbHelper = new BluetoothDBHelper(this);
+        mDbHelper = new BluetoothDbHelper(this);
         mCursor = BluetoothDBUtils.getBluetoothMediaPairs(mDbHelper);
         mAdapter = new BluetoothDeviceMediaPlayerPairAdapter(this, mCursor, 0);
         final ListView listView = (ListView)findViewById(R.id.listview_bluetooth_media_pair);

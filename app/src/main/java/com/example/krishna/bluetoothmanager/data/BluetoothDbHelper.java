@@ -8,13 +8,13 @@ import com.example.krishna.bluetoothmanager.data.BluetoothDBContract.BluetoothMe
 /**
  * Created by Krishna on 10/13/2015.
  */
-public class BluetoothDBHelper extends SQLiteOpenHelper{
+public class BluetoothDbHelper extends SQLiteOpenHelper{
 
     private static final int DTABASE_VERSION = 3;
 
     public static final String DATABASE_NAME = "bluetoothkv.db";
 
-    public BluetoothDBHelper(Context context)
+    public BluetoothDbHelper(Context context)
     {
         super(context, DATABASE_NAME, null, DTABASE_VERSION);
     }

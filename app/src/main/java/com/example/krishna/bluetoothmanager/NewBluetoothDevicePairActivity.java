@@ -3,8 +3,6 @@ package com.example.krishna.bluetoothmanager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
@@ -12,15 +10,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.krishna.bluetoothmanager.data.BluetoothDBHelper;
+import com.example.krishna.bluetoothmanager.data.BluetoothDbHelper;
 import com.example.krishna.bluetoothmanager.data.BluetoothDBUtils;
 import com.example.krishna.bluetoothmanager.data.object.BluetoothDev;
 import com.example.krishna.bluetoothmanager.data.object.DeviceMusicPlayerPair;
@@ -94,7 +90,7 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
     private List<BluetoothDev> getStoredBluetoothDevicesFromCursor( ) {
         List<BluetoothDev> storedBluetoothDevices = new ArrayList<>();
 
-        BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
+        BluetoothDbHelper dbHelper = new BluetoothDbHelper(this);
         Cursor cursor = BluetoothDBUtils.getBluetoothMediaPairs(dbHelper);
 
         while(cursor.moveToNext())
@@ -154,7 +150,7 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
 
         pairedDevices = new ArrayList<>();
 
-        BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
+        BluetoothDbHelper dbHelper = new BluetoothDbHelper(this);
         Cursor cursor = BluetoothDBUtils.getBluetoothMediaPairs(dbHelper);
         for(BluetoothDevice pairedDevice : pairedBluetoothDevices)
         {
@@ -215,7 +211,7 @@ public class NewBluetoothDevicePairActivity extends AppCompatActivity {
 
         DeviceMusicPlayerPair deviceMusicPlayerPair = new DeviceMusicPlayerPair(selectedBluetoothDevice, selectedMusicPlayer);
 
-        BluetoothDBHelper dbHelper = new BluetoothDBHelper(this);
+        BluetoothDbHelper dbHelper = new BluetoothDbHelper(this);
         long result = BluetoothDBUtils.insertBluetoothMediaPair(dbHelper, deviceMusicPlayerPair);
 
         if(result > 0)

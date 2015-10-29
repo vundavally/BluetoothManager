@@ -4,26 +4,20 @@ import android.app.ActivityManager;
 import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.util.Log;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.example.krishna.bluetoothmanager.BluetoothDeviceMediaPlayerPairAdapter;
-import com.example.krishna.bluetoothmanager.data.BluetoothDBHelper;
+import com.example.krishna.bluetoothmanager.data.BluetoothDbHelper;
 import com.example.krishna.bluetoothmanager.data.BluetoothDBUtils;
 import com.example.krishna.bluetoothmanager.data.object.MusicPlayer;
-
-import java.util.ArrayList;
 
 public class BluetoothConnectionReceiver extends BroadcastReceiver {
     private static final String PREF_FILE_NAME = "BLUETOOTH_MANAGER_SHARED_PREFS";
@@ -59,7 +53,7 @@ public class BluetoothConnectionReceiver extends BroadcastReceiver {
 
     private MusicPlayer findMusicPlayerForBluetoothDevice(Context context, BluetoothDevice bluetoothDevice) {
 
-        BluetoothDBHelper dbHelper = new BluetoothDBHelper(context);
+        BluetoothDbHelper dbHelper = new BluetoothDbHelper(context);
         Cursor cursor = BluetoothDBUtils.getMediaPlayerByDeviceAddress(dbHelper, bluetoothDevice.getAddress());
         if(cursor.moveToFirst()) {
             String mediaPlayerPackage = cursor.getString(
