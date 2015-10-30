@@ -89,23 +89,7 @@ public class BluetoothDeviceMediaPlayerPairAdapter extends RecyclerView.Adapter<
         mCursor.moveToPosition(position);
 
         int bluetoothDeviceType = mCursor.getInt(COL_BLUETOOTH_DEVICE_TYPE);
-        int bluetoothDeviceIconId;
-
-        switch (bluetoothDeviceType)
-        {
-            case BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE:
-                bluetoothDeviceIconId = R.mipmap.ic_car;
-                break;
-            case BluetoothClass.Device.AUDIO_VIDEO_WEARABLE_HEADSET:
-                bluetoothDeviceIconId = R.mipmap.ic_headset;
-                break;
-            case BluetoothClass.Device.WEARABLE_WRIST_WATCH:
-                bluetoothDeviceIconId = R.mipmap.ic_watch;
-                break;
-            default:
-                bluetoothDeviceIconId = R.mipmap.ic_headset;
-        }
-        viewHolder.mBluetoothDeviceIcon.setImageResource(bluetoothDeviceIconId);
+        viewHolder.mBluetoothDeviceIcon.setImageResource(Utility.getBluetoothDeviceIconResource(bluetoothDeviceType));
 
         String bluetoothDeviceName = mCursor.getString(COL_BLUETOOTH_DEVICE_NAME);
         viewHolder.mBluetoothDeviceName.setText(bluetoothDeviceName);

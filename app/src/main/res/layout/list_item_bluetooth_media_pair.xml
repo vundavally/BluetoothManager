@@ -27,6 +27,7 @@
         android:background="#81C784">
     <ImageView
         android:id="@+id/list_item_bluetooth_device_icon"
+        android:transitionName="@string/bluetooth_device_icon_transition_name"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"/>
 
@@ -36,7 +37,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:textStyle="bold"/>
     </LinearLayout>
 
@@ -57,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
     </LinearLayout>
 

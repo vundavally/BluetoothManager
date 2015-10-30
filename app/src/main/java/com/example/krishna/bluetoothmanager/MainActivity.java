@@ -1,5 +1,6 @@
 package com.example.krishna.bluetoothmanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Cursor mCursor;
     private BluetoothDbHelper mDbHelper;
     private RecyclerView mRecyclerView;
+    private ImageView mBluetoothIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final Activity activity = this;
 
         mDbHelper = new BluetoothDbHelper(this);
         mCursor = BluetoothDBUtils.getBluetoothMediaPairs(mDbHelper);
@@ -60,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
                             cursor.getString(BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_PACKAGE_NAME));
                     intent.putExtra("MediaPlayerVolume",
                             cursor.getInt(BluetoothDeviceMediaPlayerPairAdapter.COL_MEDIA_PLAYER_VOLUME));
-                    startActivityForResult(intent, MODIFY_REQUEST_CODE);
+                    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            activity, viewHolder.mBluetoothDeviceIcon, getString(R.string.bluetooth_device_icon_transition_name)
+                    );
+                    ActivityCompat.startActivityForResult(MainActivity.this, intent, MODIFY_REQUEST_CODE, activityOptions.toBundle());
                 }
             }
         });
@@ -87,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     return;
                 }
-                
+
                 Cursor listItemCursor = mAdapter.getCursor();
                 listItemCursor.moveToPosition(viewHolder.getAdapterPosition());
 
@@ -101,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         swipeToDismissTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public void launchPairNewDeviceIntent(View view)

@@ -12,24 +12,14 @@
     tools:showIn="@layout/modify_bluetooth_device_pair"
     tools:context="com.example.krishna.bluetoothmanager.ModifyBluetoothDevicePairActivity">
 
-    <Spinner
-        android:id="@+id/bluetooth_device_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dip"
-        android:spinnerMode="dropdown"
-        android:gravity="center_horizontal"
-        android:clickable="false"
-        />
-
     <TextView
         android:id="@+id/audioPlayerSelectLabel"
-        android:text="Select your media player" android:layout_width="match_parent"
+        android:text="Select your media player"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="15sp"
         android:paddingTop="25dip"
-        android:layout_below="@id/bluetooth_device_spinner"
         android:textStyle="bold"/>
 
     <Spinner

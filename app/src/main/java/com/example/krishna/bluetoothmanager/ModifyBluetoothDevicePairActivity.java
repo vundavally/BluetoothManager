@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.krishna.bluetoothmanager.data.BluetoothDbHelper;
@@ -25,22 +28,28 @@ import java.util.List;
 
 public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
 
-    private Spinner bluetoothSpinner;
     private Spinner audioPlayerSpinner;
+    private ImageView mBluetoothDeviceIcon;
+    private TextView mBluetoothDeviceView;
     private SeekBar mVolumeSeekBar;
     private List<MusicPlayer> musicPlayers;
+    private String mBluetoothDeviceName;
+    private String mBluetoothDeviceAddress;
+    private int mBluetoothDeviceType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        supportPostponeEnterTransition();
         setContentView(R.layout.modify_bluetooth_device_pair);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Intent modifyIntent = getIntent();
-        String bluetoothDeviceName = modifyIntent.getStringExtra("BluetoothDeviceName");
-        String bluetoothDeviceAddress = modifyIntent.getStringExtra("BluetoothDeviceAddress");
-        int bluetoothDeviceType = modifyIntent.getIntExtra("BluetoothDeviceType", -1);
+        mBluetoothDeviceName = modifyIntent.getStringExtra("BluetoothDeviceName");
+        mBluetoothDeviceAddress = modifyIntent.getStringExtra("BluetoothDeviceAddress");
+        mBluetoothDeviceType = modifyIntent.getIntExtra("BluetoothDeviceType", -1);
         String mediaPlayerName = modifyIntent.getStringExtra("MediaPlayerName");
         String mediaPlayerPackage = modifyIntent.getStringExtra("MediaPlayerPackageName");
         int mediaPlayerVolume = modifyIntent.getIntExtra("MediaPlayerVolume", 7);
@@ -51,13 +60,10 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        List<BluetoothDev> pairedDevices = new ArrayList<>();
-        pairedDevices.add(new BluetoothDev(bluetoothDeviceAddress, bluetoothDeviceName, bluetoothDeviceType));
-        bluetoothSpinner = (Spinner) findViewById(R.id.bluetooth_device_spinner);
-        BluetoothDeviceAdapter spinnerArrayAdapter =
-                new BluetoothDeviceAdapter(this, android.R.layout.simple_spinner_dropdown_item, pairedDevices);
-        bluetoothSpinner.setAdapter(spinnerArrayAdapter);
-        bluetoothSpinner.setEnabled(false);
+        mBluetoothDeviceIcon = (ImageView)findViewById(R.id.bluetooth_icon);
+        mBluetoothDeviceIcon.setImageResource(Utility.getBluetoothDeviceIconResource(mBluetoothDeviceType));
+        mBluetoothDeviceView = (TextView)findViewById(R.id.bluetooth_device_name);
+        mBluetoothDeviceView.setText(mBluetoothDeviceName);
 
         audioPlayerSpinner = (Spinner)findViewById(R.id.audio_player_spinner);
         populateMusicPlayers();
@@ -73,6 +79,7 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
 
         mVolumeSeekBar = (SeekBar) findViewById(R.id.volume_seek_bar);
         mVolumeSeekBar.setProgress(mediaPlayerVolume);
+//        supportStartPostponedEnterTransition();
     }
 
     /**
@@ -105,7 +112,7 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
 
     public void updateMediaPlayerForCurrentBluetoothDevice(View view)
     {
-        BluetoothDev selectedBluetoothDevice = (BluetoothDev)bluetoothSpinner.getSelectedItem();
+        BluetoothDev selectedBluetoothDevice = new BluetoothDev(mBluetoothDeviceAddress, mBluetoothDeviceName, mBluetoothDeviceType);
         MusicPlayer selectedMusicPlayer = (MusicPlayer)audioPlayerSpinner.getSelectedItem();
         // Update music player volume
         selectedMusicPlayer.setPlayerVolume(mVolumeSeekBar.getProgress());
@@ -120,7 +127,7 @@ public class ModifyBluetoothDevicePairActivity extends AppCompatActivity {
                     + " is paired with " + selectedMusicPlayer.toString(), Toast.LENGTH_SHORT).show();
             getIntent().putExtra("UpdatedRows", numberOfRowsAffected);
             setResult(RESULT_OK, getIntent());
-            finish();
+            supportFinishAfterTransition();
         } else
         {
             Toast.makeText(this, "Error occurred while updating your " +

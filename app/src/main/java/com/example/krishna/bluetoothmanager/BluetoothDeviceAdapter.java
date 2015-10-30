@@ -39,19 +39,7 @@ public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDev>{
         BluetoothDev bluetoothDevice = bluetoothDevices.get(position);
 
         ImageView bluetoothDeviceIcon = (ImageView)view.findViewById(R.id.dropdown_icon);
-        switch (bluetoothDevice.getDeviceType())
-        {
-            case BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE:
-            case BluetoothClass.Device.AUDIO_VIDEO_CAR_AUDIO:
-                bluetoothDeviceIcon.setImageResource(R.mipmap.ic_car);
-                break;
-            case BluetoothClass.Device.AUDIO_VIDEO_WEARABLE_HEADSET:
-                bluetoothDeviceIcon.setImageResource(R.mipmap.ic_headset);
-                break;
-            case BluetoothClass.Device.WEARABLE_WRIST_WATCH:
-                bluetoothDeviceIcon.setImageResource(R.mipmap.ic_watch);
-                break;
-        }
+        bluetoothDeviceIcon.setImageResource(Utility.getBluetoothDeviceIconResource(bluetoothDevice.getDeviceType()));
 
         TextView bluetoothDeviceName = (TextView)view.findViewById(R.id.dropdown_name);
         bluetoothDeviceName.setText(bluetoothDevice.getDeviceName());
@@ -72,18 +60,7 @@ public class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDev>{
         BluetoothDev bluetoothDevice = bluetoothDevices.get(position);
 
         ImageView bluetoothDeviceIcon = (ImageView)view.findViewById(R.id.dropdown_item_icon);
-        switch (bluetoothDevice.getDeviceType())
-        {
-            case BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE:
-                bluetoothDeviceIcon.setImageResource(R.mipmap.ic_car);
-                break;
-            case BluetoothClass.Device.AUDIO_VIDEO_WEARABLE_HEADSET:
-                bluetoothDeviceIcon.setImageResource(R.mipmap.ic_headset);
-                break;
-            case BluetoothClass.Device.WEARABLE_WRIST_WATCH:
-                bluetoothDeviceIcon.setImageResource(R.mipmap.ic_watch);
-                break;
-        }
+        bluetoothDeviceIcon.setImageResource(Utility.getBluetoothDeviceIconResource(bluetoothDevice.getDeviceType()));
 
         TextView bluetoothDeviceName = (TextView)view.findViewById(R.id.dropdown_item_name);
         bluetoothDeviceName.setText(bluetoothDevice.getDeviceName());

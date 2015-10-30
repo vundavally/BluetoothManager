@@ -3,4 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_pair_new_bluetooth_device">Pair New Bluetooth Device</string>
     <string name="title_activity_modify_bluetooth_device_pair">Modify Media Device</string>
+    <!-- For Shared Element Transitions -->
+    <string name="bluetooth_device_icon_transition_name" translatable="false">TN_BluetoothDeviceIcon</string>
 </resources>
